@@ -9,6 +9,13 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import Stack from "@mui/material/Stack";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,8 +48,12 @@ const style = {
 export default function Login() {
   const history = useHistory();
   const classes = useStyles();
-  const [Email, setEmail] = useState(null);
-  const [Password, setPassword] = useState(null);
+  const [getEmail, setgetEmail] = useState(localStorage.getItem("email"));
+  const [getPassword, setgetPassword] = useState(
+    localStorage.getItem("password")
+  );
+  const [Email, setEmail] = useState(getEmail);
+  const [Password, setPassword] = useState(getPassword);
   const [EmailVal, setEmailVal] = useState(null);
   const [PswVal, setPswVal] = useState(null);
   const [RememberMe, setRememberMe] = useState(false);
@@ -51,12 +62,14 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
+  const [SankBaropen, setSankBarOpen] = useState(false);
 
+  // console.log(getEmail)
   function emailvalidation(email) {
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (email === "") {
       setEmailVal("Requied*");
-    } else if (!email.match(mailformat)) {
+    } else if (!email?.match(mailformat) && Email === getEmail) {
       setEmailVal("enter valid email ");
       return false;
     } else {
@@ -70,7 +83,7 @@ export default function Login() {
       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$.!%*#?&])[A-Za-z\d@$.!%*#?&]{6,16}$/;
     if (password === "") {
       setPswVal("Required*");
-    } else if (!password?.match(passformat)) {
+    } else if (!password?.match(passformat) && Password === getPassword) {
       setPswVal(" You have entered an invalid password,please try again!");
       return false;
     } else {
@@ -93,18 +106,19 @@ export default function Login() {
         },
       };
 
+      setSankBarOpen(true);
       axios(config)
         .then((res) => {
+          // console.log(res.data.message)
           if (setRememberMe) {
             localStorage.setItem("email", Email);
             localStorage.setItem("password", Password);
-            history.push("/ProjectHome");
-            alert(res);
           }
+          history.push("/ProjectHome");
         })
         .catch((error) => {
           setOpen(true);
-          setErrorMessage("There was an error!", error);
+          setErrorMessage("Please verify your account.", error);
         });
     }
   };
@@ -119,7 +133,7 @@ export default function Login() {
           backgroundColor: "rgba(215, 245, 240, 0.842)",
         }}
       ></div>
-      <div style={{ width: "50%", float: "right" }}>
+      <div style={{ width: "50%", float: "right", marginLeft: "4%" }}>
         <br />
 
         <h2
@@ -133,6 +147,23 @@ export default function Login() {
         >
           Welcome!
         </h2>
+
+        <Stack spacing={2} sx={{ width: "100%" }}>
+          <Snackbar
+            open={SankBaropen}
+            autoHideDuration={5000}
+            onClose={() => setSankBarOpen(false)}
+          >
+            <Alert
+              onClose={() => setSankBarOpen(false)}
+              severity="success"
+              sx={{ width: "100%" }}
+              style={{ top: "15%", left: "50%" }}
+            >
+              Successfully Login..
+            </Alert>
+          </Snackbar>
+        </Stack>
 
         <Modal
           open={open}
@@ -186,6 +217,7 @@ export default function Login() {
             size="small"
             variant="filled"
             name="email"
+            value={Email}
             onChange={(e) => setEmail(e.target.value)}
             style={{
               marginLeft: "1%",
@@ -222,6 +254,7 @@ export default function Login() {
             variant="filled"
             size="small"
             name="password"
+            value={Password}
             onChange={(e) => setPassword(e.target.value)}
             style={{
               marginLeft: "1%",

@@ -71,7 +71,7 @@ export default function SignUP() {
       if (firstname === "") {
         setFirstVal("Required*");
       } else if (!firstname.match(nameformat)) {
-        setFirstVal(" You have enter only alphabet!");
+        setFirstVal(" You can enter only alphabet!");
         return false;
       } else {
         setFirstVal(null);
@@ -84,7 +84,7 @@ export default function SignUP() {
       if (lastname === "") {
         setLastVal("Required*");
       } else if (!lastname.match(nameformat)) {
-        setLastVal(" You have enter only alphabet!");
+        setLastVal(" You can enter only alphabet!");
         return false;
       } else {
         setLastVal(null);
@@ -97,7 +97,7 @@ export default function SignUP() {
       if (email === "") {
         setEmailVal("Requied*");
       } else if (!email.match(mailformat)) {
-        setEmailVal("enter valid email ");
+        setEmailVal("Enter valid email address");
         return false;
       } else {
         setEmailVal(null);
@@ -111,7 +111,7 @@ export default function SignUP() {
       if (password === "") {
         setPswVal("Required*");
       } else if (!password.match(passformat)) {
-        setPswVal(" You have entered an invalid password,please try again!");
+        setPswVal(" You can entered an invalid password,please try again!");
         return false;
       } else {
         setPswVal(null);
@@ -126,14 +126,14 @@ export default function SignUP() {
         setCpswVal(null);
         return true;
       } else {
-        setCpswVal(" Password dose not match ");
+        setCpswVal(" Password dose not matching ");
         return false;
       }
     }
 
     if (fval && emailval && lval && pval && cval) {
       if (!CheckBox) {
-        setCheckBoxVal("please agree terms & condition");
+        setCheckBoxVal("Please agree terms & condition");
       } else {
         const config = {
           method: "post",
@@ -146,14 +146,16 @@ export default function SignUP() {
             confirm_password: Cpassword,
             terms_condition: CheckBox ? 1 : 0,
           },
+          responseType: "json",
         };
         setOpen(true);
         axios(config)
           .then((res) => {
+            console.log(res);
             history.push("/Login");
           })
           .catch((error) => {
-            alert(error, "server response bad");
+            alert(error, "Request failed");
           });
       }
     }
@@ -169,7 +171,14 @@ export default function SignUP() {
           backgroundColor: "rgba(215, 245, 240, 0.842)",
         }}
       ></div>
-      <div style={{ width: "50%", float: "right" }}>
+      <div
+        style={{
+          width: "50%",
+          float: "right",
+          marginLeft: "4%",
+          marginTop: "5% ",
+        }}
+      >
         <br />
         <h4
           style={{
@@ -194,7 +203,7 @@ export default function SignUP() {
               sx={{ width: "100%" }}
               style={{ top: "15%", left: "50%" }}
             >
-              Successfully Account Created!
+              Account Successfully Created!
             </Alert>
           </Snackbar>
         </Stack>
@@ -239,8 +248,8 @@ export default function SignUP() {
                 marginRight: "150%",
               }}
             />
+            <span style={{ textAlign: "left", color: "red" }}>{FirstVal}</span>
           </label>
-          <span style={{ textAlign: "left", color: "red" }}>{FirstVal}</span>
 
           <label
             style={{
@@ -266,8 +275,8 @@ export default function SignUP() {
               }}
               variant="filled"
             />
+            <span style={{ textAlign: "left", color: "red" }}>{LastVal}</span>
           </label>
-          <span style={{ textAlign: "left", color: "red" }}>{LastVal}</span>
 
           <Box
             component="span"
@@ -276,6 +285,7 @@ export default function SignUP() {
           ></Box>
           <br />
           <br />
+          
           <label
             style={{
               float: "left",

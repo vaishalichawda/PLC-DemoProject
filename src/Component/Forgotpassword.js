@@ -47,9 +47,9 @@ export default function Login() {
 
   function emailvalidation(email) {
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (email === "") {
+    if (email === null) {
       setEmailVal("Requied*");
-    } else if (!email.match(mailformat)) {
+    } else if (!email?.match(mailformat)) {
       setEmailVal("enter valid email ");
       return false;
     } else {
@@ -91,15 +91,16 @@ export default function Login() {
           backgroundColor: "rgba(215, 245, 240, 0.842)",
         }}
       ></div>
-      <div style={{ width: "50%", float: "right" }}>
+      <div style={{ width: "50%", float: "right", marginLeft: "4%" }}>
         <br />
 
         <h2
           style={{
             textAlign: "center",
-            marginTop: "17%",
+            marginTop: "20%",
             fontWeight: 650,
             color: "black",
+            // marginRight:"8%",
             fontStyle: "revert",
           }}
         >
